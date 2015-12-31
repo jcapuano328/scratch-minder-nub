@@ -1,0 +1,38 @@
+{
+  "name": "scratch-minder-nub",
+  "version": "0.0.1",
+  "description": "Common components for scratch-minder",
+  "main": "index.js",
+  "scripts": {
+    "test": "node ./node_modules/mocha/bin/mocha ./tests/unit",
+    "test-integration": "node ./node_modules/mocha/bin/mocha ./tests/integration",
+    "debug": "node-debug node_modules/mocha/bin/_mocha tests/unit/server-spec.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jcapuano328/scratch-minder-nub.git"
+  },
+  "keywords": [
+    "rest",
+    "oauth"
+  ],
+  "author": "jeff capuano",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jcapuano328/scratch-minder-nub/issues"
+  },
+  "homepage": "https://github.com/jcapuano328/scratch-minder-nub#readme",
+  "dependencies": {
+    "colors": "^1.1.2",    
+    "file": "^0.2.2",
+    "lodash": "^3.10.1",
+    "mongodb": "^2.0.52"
+  },
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "mocha": "^2.3.4",
+    "sandboxed-module": "^2.0.3",
+    "sinon": "^1.17.2",
+    "sinon-chai": "^2.8.0"
+  }
+}
