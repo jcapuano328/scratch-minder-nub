@@ -2,7 +2,7 @@
 var path = require('path'),
     file = require('file');
 
-var methods = ['post', 'get', 'put', 'del'];
+var methods = ['post', 'get', 'put', 'del', 'delete'];
 
 module.exports = (config, log) => {
     log = log || require('./log')(config);
@@ -30,9 +30,9 @@ module.exports = (config, log) => {
             }
             routes.forEach((route) => {
                 log.debug('Register route ' + JSON.stringify(route));
-                if (route.method == 'delete') { route.method = 'del'; }
+                //if (route.method == 'delete') { route.method = 'del'; }
                 if (methods.indexOf(route.method) < 0) {
-                    throw new Exception(route.method + ' is not a valid HTTP method');
+                    throw new Error(route.method + ' is not a valid HTTP method');
                 }
                 server[route.method](route.uri, auth(route.protected), route.handler);
             });

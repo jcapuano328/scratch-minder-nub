@@ -24,7 +24,8 @@ describe('Router', () => {
 	        get: sinon.stub(),
 	        post: sinon.stub(),
 			put: sinon.stub(),
-			del: sinon.stub()
+			del: sinon.stub(),
+			delete: sinon.stub()
 		};
 		env.auth = sinon.stub().returns(() => {});
 
@@ -93,7 +94,7 @@ describe('Router', () => {
 				expect(env.server.get).to.have.been.calledWith('/path/to/resource1', sinon.match.func, sinon.match.func);
 				expect(env.server.post).to.have.been.called;
 				expect(env.server.put).to.have.been.called;
-				expect(env.server.del).to.have.been.called;
+				expect(env.server.delete).to.have.been.called;
 			});
 		});
 
@@ -123,7 +124,7 @@ describe('Router', () => {
 				expect(env.server.get).to.have.been.called;
 				expect(env.server.post).to.have.been.called;
 				expect(env.server.put).to.have.been.called;
-				expect(env.server.del).to.have.been.called;
+				expect(env.server.delete).to.have.been.called;
 			});
 		});
 
@@ -142,7 +143,7 @@ describe('Router', () => {
 				expect(env.server.get).to.have.been.called;
 				expect(env.server.post).to.have.been.called;
 				expect(env.server.put).to.have.been.called;
-				expect(env.server.del).to.have.been.called;
+				expect(env.server.delete).to.have.been.called;
 			});
 			it('should use the auth middleware', () => {
 				expect(env.auth.callCount).to.equal(4);
