@@ -1,24 +1,16 @@
 'use strict';
 var mongo = require('mongodb');
 
+
 module.exports = (config, connectionpool, log) => {
     log = log || require('./log')(config);
     connectionpool = connectionpool || require('./connection-pool')(log);
-
-    function connectionString(databasename) {
-        databasename = databasename || config.db.name;
-        let connstr = 'mongodb://';
-        if (config.db.username) {
-            connstr += config.db.username + ':' + config.db.password + '@';
-        }
-        connstr += config.db.server + ':' + config.db.port + '/' + databasename;
-        return connstr;
-    }
+    var connectionStringBuilder = require('./connection-string-builder')(config);
 
     return (collectionname, databasename) => {
         return {
             connect() {
-                var connstr = connectionString(databasename);
+                var connstr = connectionStringBuilder(databasename);
                 log.trace('Connecting to ' + connstr);
                 return connectionpool.connect(connstr);
             },

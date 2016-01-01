@@ -27,6 +27,10 @@ describe('Interface', () => {
         expect(env.interface).to.have.property('Logger');
     });
 
+	it('should provide a connection string builder', () => {
+        expect(env.interface).to.have.property('ConnectionStringBuilder');
+    });
+
     it('should provide a connection pool', () => {
         expect(env.interface).to.have.property('ConnectionPool');
     });
