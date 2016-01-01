@@ -2,8 +2,8 @@
 var mongo = require('mongodb');
 
 module.exports = (config, connectionpool, log) => {
-    log = log || require('../src/log')(config);
-    connectionpool = connectionpool || require('../src/connection-pool')(log);
+    log = log || require('./log')(config);
+    connectionpool = connectionpool || require('./connection-pool')(log);
 
     function connectionString(databasename) {
         databasename = databasename || config.db.name;

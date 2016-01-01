@@ -26,9 +26,7 @@ describe('Router', () => {
 			put: sinon.stub(),
 			del: sinon.stub()
 		};
-		env.oauth = {
-			authorise: sinon.stub().returns(() => {})
-		};
+		env.auth = sinon.stub().returns(() => {});
 
 		env.routes = {
 			file1: {
@@ -68,17 +66,15 @@ describe('Router', () => {
 		};
 
 		env.modules = {
-			'config': env.config,
 			'file': env.file,
-			'../services/oauth2': env.oauth,
-			'../lib/log': env.log
+			'./log': env.log
 		};
 		env.modules[env.routes.file1.path] = env.routes.file1.routes;
 		env.modules[env.routes.file2.path] = env.routes.file2.routes;
 
-		env.router = sandbox.require('../../src/server/router', {
+		env.router = sandbox.require('../../src/router', {
 			requires: env.modules
-		});
+		})(env.config)(env.auth);
 	});
 
 	describe('register', () => {
@@ -104,17 +100,15 @@ describe('Router', () => {
 		describe('function', () => {
 			beforeEach((done) => {
 				env.modules = {
-					'config': env.config,
 					'file': env.file,
-					'../services/oauth2': env.oauth,
-					'../lib/log': env.log
+					'./log': env.log
 				};
 				env.modules[env.routes.file1.path] = env.routes.file1.routes;
 				env.modules[env.routes.file2.path] = () => {return env.routes.file2.routes};
 
-				env.router = sandbox.require('../../src/server/router', {
+				env.router = sandbox.require('../../src/router', {
 					requires: env.modules
-				});
+				})(env.config)(env.auth);
 
 				env.file.walk.yields(null, null, null, [env.routes.file1.path, env.routes.file2.path]);
 
@@ -151,7 +145,7 @@ describe('Router', () => {
 				expect(env.server.del).to.have.been.called;
 			});
 			it('should use the auth middleware', () => {
-				expect(env.oauth.authorise.callCount).to.equal(3);
+				expect(env.auth.callCount).to.equal(4);
 			});
 		});
 	});

@@ -47,13 +47,12 @@ describe('Respository', () => {
 			collection: sinon.stub().returns(env.collection)
         };
 
-        env.Repository = sandbox.require('../../src/lib/repository', {
+        env.Repository = sandbox.require('../../src/repository', {
             requires: {
-                'config': env.config,
-                '../lib/log': env.log,
-                '../lib/connection-pool': env.connectionpool
+                './log': env.log,
+                './connection-pool': sinon.stub().returns(env.connectionpool)
             }
-        });
+        })(env.config);
     });
 
     describe('instantiate', () => {

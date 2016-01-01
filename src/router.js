@@ -5,9 +5,10 @@ var path = require('path'),
 var methods = ['post', 'get', 'put', 'del'];
 
 module.exports = (config, log) => {
-    log = log || require('../src/log')(config);
+    log = log || require('./log')(config);
+
     return (auth) => {
-        auth = auth || () => {return (req,res,next) { next && next();}}
+        auth = auth || () => {return (req,res,next) => { next && next();}}
 
         function findFiles(folder) {
             log.debug('load routes from ' + folder);
@@ -36,7 +37,7 @@ module.exports = (config, log) => {
                 server[route.method](route.uri, auth(route.protected), route.handler);
             });
         }
-                
+
         return {
             register(server) {
                 log.debug('Register routes');

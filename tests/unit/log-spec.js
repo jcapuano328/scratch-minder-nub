@@ -34,14 +34,13 @@ describe('log service', () => {
         env.colors.error.returnsArg(0);
         env.colors.fatal.returnsArg(0);
 
-		env.logger = sandbox.require('../../src/lib/log.js', {
+		env.logger = sandbox.require('../../src/log.js', {
         	requires : {
-				'config': env.config,
                 'colors': env.colors,
 				'./console': env.console,
                 'lodash': _
 			}
-		});
+		})(env.config);
     });
 
     describe('logger', () => {
@@ -64,14 +63,13 @@ describe('log service', () => {
 	    		describe('levels', () => {
 		        	beforeEach(() => {
 	                	env.config.log.server.levels = ['foo', 'bar', 'wth'];
-						env.logger = sandbox.require('../../src/lib/log.js', {
+						env.logger = sandbox.require('../../src/log.js', {
 				        	requires : {
-								'config': env.config,
 								'colors': env.colors,
 								'./console': env.console,
                                 'lodash': _
 							}
-						});
+						})(env.config);
 
 	                    env.log = env.logger;
 		            });
@@ -105,14 +103,13 @@ describe('log service', () => {
         describe('custom', () => {
         	beforeEach(() => {
             	env.config.log.server.expressFormat = 'dev';
-				env.logger = sandbox.require('../../src/lib/log.js', {
+				env.logger = sandbox.require('../../src/log.js', {
 		        	requires : {
-						'config': env.config,
                         'colors': env.colors,
 						'./console': env.console,
                         'lodash': _
 					}
-				});
+				})(env.config);
 
             	env.format = env.logger.getExpressFormat();
             });
@@ -142,14 +139,13 @@ describe('log service', () => {
                         enabled: false
 			        }
                 };
-				env.logger = sandbox.require('../../src/lib/log.js', {
+				env.logger = sandbox.require('../../src/log.js', {
 		        	requires : {
-						'config': env.config,
                         'colors': env.colors,
 						'./console': env.console,
                         'lodash': _
 					}
-				});
+				})(env.config);
 
             	env.log = env.logger;
                 env.log.info('foo');
@@ -167,14 +163,13 @@ describe('log service', () => {
 	                        level: 'info'
 				        }
 	                };
-					env.logger = sandbox.require('../../src/lib/log.js', {
+					env.logger = sandbox.require('../../src/log.js', {
 			        	requires : {
-							'config': env.config,
                             'colors': env.colors,
 							'./console': env.console,
                             'lodash': _
 						}
-					});
+					})(env.config);
 
 	            	env.log = env.logger;
 	                env.log.debug('foo');
@@ -191,14 +186,13 @@ describe('log service', () => {
 	                        level: 'info'
 				        }
 	                };
-					env.logger = sandbox.require('../../src/lib/log.js', {
+					env.logger = sandbox.require('../../src/log.js', {
 			        	requires : {
-							'config': env.config,
                             'colors': env.colors,
 							'./console': env.console,
                             'lodash': _
 						}
-					});
+					})(env.config);
 
 	            	env.log = env.logger;
 	                env.log.warn('foo');
@@ -217,14 +211,13 @@ describe('log service', () => {
 	                        format: ['level', 'message', 'user', 'platform']
 				        }
 	                };
-					env.logger = sandbox.require('../../src/lib/log.js', {
+					env.logger = sandbox.require('../../src/log.js', {
 			        	requires : {
-							'config': env.config,
                             'colors': env.colors,
 							'./console': env.console,
                             'lodash': _
 						}
-					});
+					})(env.config);
 
 	                env.log = env.logger;
 	                env.log.warn('foo');
@@ -245,14 +238,13 @@ describe('log service', () => {
 	                        format: ['level', 'message', 'user', 'platform']
 				        }
 	                };
-					env.logger = sandbox.require('../../src/lib/log.js', {
+					env.logger = sandbox.require('../../src/log.js', {
 			        	requires : {
-							'config': env.config,
                             'colors': env.colors,
 							'./console': env.console,
                             'lodash': _
 						}
-					});
+					})(env.config);
 
 	                env.log = env.logger;
 	            });
@@ -294,14 +286,13 @@ describe('log service', () => {
 	                        json: true
 				        }
 	                };
-					env.logger = sandbox.require('../../src/lib/log.js', {
+					env.logger = sandbox.require('../../src/log.js', {
 			        	requires : {
-							'config': env.config,
                             'colors': env.colors,
 							'./console': env.console,
                             'lodash': _
 						}
-					});
+					})(env.config);
 
 	                env.log = env.logger;
 	                env.log.warn('foo');
@@ -328,14 +319,13 @@ describe('log service', () => {
 	                        json: true
 				        }
 	                };
-					env.logger = sandbox.require('../../src/lib/log.js', {
+					env.logger = sandbox.require('../../src/log.js', {
 			        	requires : {
-							'config': env.config,
                             'colors': env.colors,
 							'./console': env.console,
                             'lodash': _
 						}
-					});
+					})(env.config);
 
 	                env.log = env.logger;
 	            });

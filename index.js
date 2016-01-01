@@ -4,7 +4,7 @@ module.exports = (config) => {
     return {
         Logger: log,
         ConnectionPool: connpool,
-        Repository: require('/src/repository')(config, connpool, log),
-        Router: require('/src/router')(config, log)
+        Repository: require('./src/repository')(config, connpool, log),
+        Router: require('./src/router')(config, log)
     };
 };

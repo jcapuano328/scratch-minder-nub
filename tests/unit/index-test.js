@@ -16,11 +16,11 @@ describe('Interface', () => {
                 }
             },
             db: {
-                
+
             }
         };
 
-        env.interface = sandbox.require('../../index')(env.config);
+        env.interface = /*sandbox.*/require('../../index')(env.config);
     });
 
     it('should provide a logger', () => {

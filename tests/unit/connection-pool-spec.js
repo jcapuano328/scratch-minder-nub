@@ -20,12 +20,12 @@ describe('Connection Pool', () => {
 			close: sinon.stub()
         };
 
-		env.pool = sandbox.require('../../src/lib/connection-pool', {
+		env.pool = sandbox.require('../../src/connection-pool', {
 			requires: {
 				'mongodb': env.mongodb,
-				'../lib/log': env.log
+				'./log': env.log
 			}
-		});
+		})();
     });
 
     describe('instantiate', () => {
@@ -57,15 +57,15 @@ describe('Connection Pool', () => {
 
 		describe('in cache', () => {
             beforeEach((done) => {
-				env.pool = sandbox.require('../../src/lib/connection-pool', {
+				env.pool = sandbox.require('../../src/connection-pool', {
 					requires: {
 						'mongodb': env.mongodb,
-						'../lib/log': env.log
+						'./log': env.log
 					},
 					locals: {
 						pool: {'connstr': env.db}
 					}
-				});
+				})();
 
                 env.pool.connect('connstr')
                 .then((db) => {
@@ -87,16 +87,16 @@ describe('Connection Pool', () => {
 		describe('specific connection', () => {
 			beforeEach((done) => {
 				env.db.close.yields(null, null);
-				env.sb = sandbox.load('../../src/lib/connection-pool', {
+				env.sb = sandbox.load('../../src/connection-pool', {
 					requires: {
 						'mongodb': env.mongodb,
-						'../lib/log': env.log
+						'./log': env.log
 					},
 					locals: {
 						pool: {'connstr': env.db}
 					}
 				});
-				env.pool = env.sb.exports;
+				env.pool = env.sb.exports();
 
 				env.pool.disconnect('connstr')
 				.then((res) => {
@@ -117,16 +117,16 @@ describe('Connection Pool', () => {
 		describe('all connections', () => {
 			beforeEach((done) => {
 				env.db.close.yields(null, null);
-				env.sb = sandbox.load('../../src/lib/connection-pool', {
+				env.sb = sandbox.load('../../src/connection-pool', {
 					requires: {
 						'mongodb': env.mongodb,
-						'../lib/log': env.log
+						'./log': env.log
 					},
 					locals: {
 						pool: {'connstr': env.db, 'connstr2': env.db}
 					}
 				});
-				env.pool = env.sb.exports;
+				env.pool = env.sb.exports();
 
 				env.pool.disconnect()
 				.then((res) => {

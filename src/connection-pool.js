@@ -4,7 +4,7 @@ var mongo = require('mongodb').MongoClient;
 var pool = pool || {};
 
 module.exports = (log) => {
-    log = log || require('../src/log');
+    log = log || require('./log')();
 
     function close(connstr) {
         return new Promise((resolve,reject) => {
@@ -23,40 +23,42 @@ module.exports = (log) => {
         });
     }
 
-    connect(connstr) {
-        return new Promise((resolve,reject) => {
-            if (!connstr) {
-                log.error('Connection String missing');
-                return reject('Connection String missing');
-            }
-            if (pool.hasOwnProperty(connstr)) {
-                log.trace('connection in pool');
-                return resolve(pool[connstr]);
-            }
-            log.trace('connection not in pool');
-            mongo.connect(connstr, (err, db) => {
-                if (err) {
-                    return reject(err);
+    return {
+        connect(connstr) {
+            return new Promise((resolve,reject) => {
+                if (!connstr) {
+                    log.error('Connection String missing');
+                    return reject('Connection String missing');
                 }
-                pool[connstr] = db;
-                resolve(db);
-            });
-        });
-    },
-    disconnect(connstr) {
-        return new Promise((resolve,reject) => {
-            if (!connstr) {
-                log.trace('disconnect all in pool');
-                var promises = [];
-                Object.keys(pool).forEach((key) => {
-                    promises.push(close(key));
-                    delete pool[key];
+                if (pool.hasOwnProperty(connstr)) {
+                    log.trace('connection in pool');
+                    return resolve(pool[connstr]);
+                }
+                log.trace('connection not in pool');
+                mongo.connect(connstr, (err, db) => {
+                    if (err) {
+                        return reject(err);
+                    }
+                    pool[connstr] = db;
+                    resolve(db);
                 });
-                Promise.all(promises).then(() => {resolve(true)}).catch(reject);
-            }
-            else {
-                close(connstr).then(resolve).catch(reject);
-            }
-        });
-    }
+            });
+        },
+        disconnect(connstr) {
+            return new Promise((resolve,reject) => {
+                if (!connstr) {
+                    log.trace('disconnect all in pool');
+                    var promises = [];
+                    Object.keys(pool).forEach((key) => {
+                        promises.push(close(key));
+                        delete pool[key];
+                    });
+                    Promise.all(promises).then(() => {resolve(true)}).catch(reject);
+                }
+                else {
+                    close(connstr).then(resolve).catch(reject);
+                }
+            });
+        }
+    };
 }
