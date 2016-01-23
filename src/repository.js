@@ -23,7 +23,7 @@ module.exports = (config, connectionpool, log) => {
                 options = options || {};
                 return this.connect()
                 .then((db) => {
-                    log.trace('Select ' + JSON.stringify(query) + ' from ' + collectionname);
+                    log.trace('Select ' + JSON.stringify(query) + ' from ' + collectionname + ' ' + JSON.stringify(options));
                     var collection = db.collection(collectionname);
                     return new Promise((resolve,reject) => {
                         collection.find(query, options, (err, cursor) => {
