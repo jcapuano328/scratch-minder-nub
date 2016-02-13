@@ -108,11 +108,22 @@ module.exports = (config, connectionpool, log) => {
                     log.trace('Remove ' + JSON.stringify(query));
                     var collection = db.collection(collectionname);
                     return new Promise((resolve,reject) => {
-                        collection.remove(query, options, (err, result) => {
+                        collection.find(query, options, (err, cursor) => {
                             if (err) {
                                 return reject(err);
                             }
-                            return resolve(result);
+                            cursor.toArray((e1, data) => {
+                                data = data || [{}];
+                                if (e1) {
+                                    return reject(e1);
+                                }
+                                collection.remove(query, options, (e2, r) => {
+                                    if (e2) {
+                                        return reject(e2);
+                                    }
+                                    return resolve(data[0]);
+                                });
+                            });
                         });
                     });
                 });
