@@ -189,6 +189,109 @@ describe('Respository', () => {
         });
     });
 
+	describe('select top', () => {
+		beforeEach(() => {
+			env.connectionpool.connect.returns(Promise.accept(env.db));
+			env.repo = env.Repository('foos');
+		});
+		describe('found', () => {
+            beforeEach((done) => {
+				env.cursor.toArray.yields(null, [{name: 1}, {name: 2}]);
+				env.collection.find.yields(null, env.cursor);
+                env.repo.selectTop(1, {name: 'foo'})
+                .then((data) => {
+                    env.data = data;
+                    done();
+                })
+                .catch(done);
+            });
+			it('should retrieve from the connection pool', () => {
+                expect(env.connectionpool.connect).to.have.been.calledOnce;
+                expect(env.connectionpool.connect).to.have.been.calledWith('mongodb://dbserver:12345/scratchminder');
+            });
+            it('should search the database', () => {
+                expect(env.db.collection).to.have.been.calledOnce;
+                expect(env.db.collection).to.have.been.calledWith('foos');
+				expect(env.collection.find).to.have.been.calledOnce;
+				expect(env.collection.find).to.have.been.calledWith({name: 'foo'});
+            });
+            it('should retrieve data', () => {
+                expect(env.data).to.not.be.null;
+				expect(env.data).to.be.an.array;
+				expect(env.data).to.have.length(1);
+            });
+        });
+
+		describe('not found', () => {
+            beforeEach((done) => {
+				env.cursor.toArray.yields(null, null);
+				env.collection.find.yields(null, env.cursor);
+                env.repo.selectTop(1, {name: 'foo'})
+                .then((data) => {
+                    env.data = data;
+                    done();
+                })
+                .catch(done);
+            });
+			it('should retrieve from the connection pool', () => {
+                expect(env.connectionpool.connect).to.have.been.calledOnce;
+                expect(env.connectionpool.connect).to.have.been.calledWith('mongodb://dbserver:12345/scratchminder');
+            });
+            it('should search the database', () => {
+                expect(env.db.collection).to.have.been.calledOnce;
+                expect(env.db.collection).to.have.been.calledWith('foos');
+				expect(env.collection.find).to.have.been.calledOnce;
+				expect(env.collection.find).to.have.been.calledWith({name: 'foo'});
+            });
+            it('should not retrieve data', () => {
+				expect(env.data).to.not.be.null;
+				expect(env.data).to.be.an.array;
+				expect(env.data).to.have.length(0);
+            });
+        });
+    });
+
+	describe('select stream', () => {
+		beforeEach(() => {
+			env.connectionpool.connect.returns(Promise.accept(env.db));
+			env.repo = env.Repository('foos');
+
+			env.stream = {};
+			env.findstream = {
+				stream: sinon.stub().returns(env.stream)
+			};
+		});
+		describe('found', () => {
+            beforeEach((done) => {
+				env.collection.find.returns(env.findstream);
+                env.repo.selectStream({name: 'foo'})
+                .then((data) => {
+                    env.data = data;
+                    done();
+                })
+                .catch(done);
+            });
+			it('should retrieve from the connection pool', () => {
+                expect(env.connectionpool.connect).to.have.been.calledOnce;
+                expect(env.connectionpool.connect).to.have.been.calledWith('mongodb://dbserver:12345/scratchminder');
+            });
+            it('should search the database', () => {
+                expect(env.db.collection).to.have.been.calledOnce;
+                expect(env.db.collection).to.have.been.calledWith('foos');
+				expect(env.collection.find).to.have.been.calledOnce;
+				expect(env.collection.find).to.have.been.calledWith({name: 'foo'});
+            });
+			it('should retrieve the stream', () => {
+                expect(env.findstream.stream).to.have.been.calledOnce;
+            });
+            it('should retrieve data', () => {
+                expect(env.data).to.not.be.null;
+				expect(env.data).to.have.property('collection', env.collection);
+				expect(env.data).to.have.property('stream', env.stream);
+            });
+        });
+    });
+
     describe('insert', () => {
 		beforeEach((done) => {
 			env.connectionpool.connect.returns(Promise.accept(env.db));
