@@ -63,6 +63,8 @@ describe('Respository', () => {
             expect(env.repo).to.respondTo('connect');
 			expect(env.repo).to.respondTo('disconnect');
             expect(env.repo).to.respondTo('select');
+			expect(env.repo).to.respondTo('selectTop');
+			expect(env.repo).to.respondTo('selectStream');
             expect(env.repo).to.respondTo('insert');
             expect(env.repo).to.respondTo('update');
             expect(env.repo).to.respondTo('remove');
@@ -349,6 +351,8 @@ describe('Respository', () => {
     describe('remove', () => {
 		beforeEach((done) => {
 			env.connectionpool.connect.returns(Promise.accept(env.db));
+			env.cursor.toArray.yields(null, null);
+			env.collection.find.yields(null, env.cursor);
 			env.collection.remove.yields(null, 1);
 			env.repo = env.Repository('foos');
             env.repo.remove({name: 'foo'})
@@ -369,7 +373,7 @@ describe('Respository', () => {
 			expect(env.collection.remove).to.have.been.calledWith({name: 'foo'});
         });
         it('should be successful', () => {
-            expect(env.result).to.equal(1);
+            expect(env.result).to.deep.equal({});
         });
     });
 

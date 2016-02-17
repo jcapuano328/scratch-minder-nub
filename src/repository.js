@@ -1,6 +1,12 @@
 'use strict';
 var mongo = require('mongodb');
 
+let ensureID = (obj) => {
+	if (obj && obj._id) {
+		obj._id = (typeof obj._id === 'string' ? mongo.ObjectID(obj._id) : obj._id);
+	}
+	return obj;
+}
 
 module.exports = (config, connectionpool, log) => {
     log = log || require('./log')(config);
@@ -74,6 +80,7 @@ module.exports = (config, connectionpool, log) => {
                     log.trace('Insert ' + JSON.stringify(data));
                     var collection = db.collection(collectionname);
                     return new Promise((resolve,reject) => {
+                        ensureID(data);
                         collection.insert(data, options, (err, result) => {
                             if (err) {
                                 return reject(err);
@@ -135,6 +142,7 @@ module.exports = (config, connectionpool, log) => {
                     log.trace('Save ' + JSON.stringify(data));
                     var collection = db.collection(collectionname);
                     return new Promise((resolve,reject) => {
+                        ensureID(data);
                         collection.save(data, options, (err, result) => {
                             if (err) {
                                 return reject(err);
