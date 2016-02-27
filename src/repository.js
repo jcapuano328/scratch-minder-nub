@@ -139,10 +139,10 @@ module.exports = (config, connectionpool, log) => {
                 options = options || {};
                 return this.connect()
                 .then((db) => {
-                    log.trace('Save ' + JSON.stringify(data));
                     var collection = db.collection(collectionname);
                     return new Promise((resolve,reject) => {
                         ensureID(data);
+						log.trace('Save ' + JSON.stringify(data));
                         collection.save(data, options, (err, result) => {
                             if (err) {
                                 return reject(err);
